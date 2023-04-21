@@ -222,9 +222,16 @@ where
         }
     }
 
-    unsafe fn get_mut_unchecked(this: &mut Self) -> &mut P::Data {
+    /// Returns a mutable reference into the given `Arc`,
+    /// without any check.    
+    pub unsafe fn get_mut_unchecked(this: &mut Self) -> &mut P::Data {
         &mut (*this.ptr.as_ref().data.get()).data
         // &mut (*this.ptr.as_ptr()).data
+    }
+
+    /// Gets the number of strong (`Arc`) pointers to this allocation.    
+    pub fn strong_count(this: &Self) -> usize {
+        this.inner().strong.load(Ordering::Acquire)
     }
 
     #[inline(never)]
